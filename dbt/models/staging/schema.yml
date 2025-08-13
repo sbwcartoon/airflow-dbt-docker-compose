@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_game_events
+    description: "Cleaned game event data from raw ingestion layer"
+    columns:
+      - name: user_id
+        description: "User id"
+        tests:
+          - not_null
+      - name: email
+        description: "Email"
+        tests:
+          - not_null
+      - name: event_type
+        description: "Event type"
+        tests:
+          - not_null
+      - name: event_time
+        description: "When the event occurred"
+        tests:
+          - not_null
+      - name: loaded_at
+        description: "When the record was ingested into the warehouse"
+        tests:
+          - not_null

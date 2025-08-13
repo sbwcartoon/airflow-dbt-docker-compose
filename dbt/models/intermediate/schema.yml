@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: int_user_event_daily_summary
+    description: "Game event counts by users, event types and event occurred date"
+    columns:
+      - name: user_id
+        description: "User id"
+        tests:
+          - not_null
+      - name: email
+        description: "Email"
+        tests:
+          - not_null
+      - name: event_type
+        description: "Event type"
+        tests:
+          - not_null
+      - name: event_date
+        description: "Day of the event occurred"
+        tests:
+          - not_null
+      - name: event_day_of_week
+        description: "Day of week of the event occurred"
+        tests:
+          - not_null
+      - name: event_count
+        description: "Event count of the user of the day"
+        tests:
+          - not_null
+      - name: first_event_time
+        description: "First event time of the user of the day"
+        tests:
+          - not_null
+      - name: last_event_time
+        description: "Last event time of the user of the day"
+        tests:
+          - not_null

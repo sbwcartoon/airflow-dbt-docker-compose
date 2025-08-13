@@ -1,0 +1,8 @@
+.idea/
+.vscode/
+.DS_Store
+
+ssh_host_keys/
+
+dbt_packages/
+logs/

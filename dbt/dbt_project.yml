@@ -1,0 +1,19 @@
+name: game_analytics
+version: "1.0"
+profile: default
+model-paths: ["models"]
+target-path: "target"
+
+models:
+  game_analytics:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: ephemeral
+    marts:
+      +schema: marts
+      +materialized: incremental
+      dim_users:
+        +materialized: table

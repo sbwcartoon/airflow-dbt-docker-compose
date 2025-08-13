@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "airflow-simple"
+version = "0.1.0"
+description = "airflow simple 예제"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+apache-airflow = {extras = ["postgres"], version = "^3.0.3"}
+apache-airflow-providers-fab = "^2.3.1"
+psycopg2-binary = ">=2.9.10,<3.0.0"
+apache-airflow-providers-ssh = "^4.1.2"
+pyarrow = "^21.0.0"
+pandas = "<2.2.0"
+paramiko = "<3"

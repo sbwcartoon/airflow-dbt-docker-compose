@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: game_events
+        description: "Raw game events"
+        columns:
+          - name: event_id
+            description: "Event id"
+            tests:
+              - not_null
+              - unique
+          - name: user_id
+            description: "User id"
+            tests:
+              - not_null
+          - name: email
+            description: "Masked email"
+          - name: event_type
+            description: "Type of event"
+          - name: event_at
+            description: "Event occurred time"
+            tests:
+              - not_null
+          - name: loaded_at
+            description: "Loaded time"
+            tests:
+              - not_null
