@@ -10,6 +10,7 @@
 
 - airflow meta db는 postgres를 사용하는데, 구동 전에 사용할 데이터베이스 및 사용자를 생성하고 접근 권한 부여
 - 필요 시 [fernet key 신규 생성 및 적용](#airflow-meta-db-암호화fernet-key-적용)(기본값으로 airflow 설치 시 생성되는 값 사용함)
+- gcp에서 분석 db에 사용할 bigquery 서비스 계정 키를 발급하고, 해당 파일 명을 env 파일의 GOOGLE_APPLICATION_CREDENTIALS 관련 값으로 설정 
 
 ### 구동
 
@@ -119,6 +120,10 @@ env file을 선택해서 실행 script를 구동. .env.example을 참고하여 e
   환경 정보만 요구하며 LOCAL_... 등의 local db 정보는 .env.local에 정의돼 있으므로 정상 작동함. .env.prod도 마찬가지
 - docker-compose.yml에서는 상기 환경 변수를 dbt 관련 컨테이너의 environment에 설정함(dbt docs 등 컨테이너를 직접 구동하는 방식일 경우 필수)
 - 또한 airflow에서 dbt를 작동시킬 때 명령어에 해당 환경 변수들을 포함해야 하므로 airflow의 environment로도 설정함
+- docker-compose.yml의 volumes로 LOCAL_GOOGLE_APPLICATION_CREDENTIALS 또는 PROD_GOOGLE_APPLICATION_CREDENTIALS는 값이 없을 경우 기존의 volume 설정을 다시 씀
+  - 해당 환경 변수는 env 파일에 둘 중 하나만 값이 존재
+  - 따라서 둘 중 하나는 빈 문자열이 되어 오류가 발생함
+  - 이를 막기 위해 dummy로 기존의 volume을 다시 설정
 
 ### dbt 구동 시 docker-compose.yml의 command로 dbt deps를 실행하는 이유
 
@@ -151,3 +156,10 @@ env file을 선택해서 실행 script를 구동. .env.example을 참고하여 e
 
   - 로컬에서 ssh_host_rsa_key, ssh_host_rsa_key.pub 키 생성 및 접근 권한 부여(해당 키가 로컬에 존재할 경우 본 단계는 수행하지 않음)
   - env 파일에 ssh_host_rsa_key.pub의 값을 SSH_HOST_KEY로 저장
+
+### bigquery 서비스 계정 키
+
+- 키의 역할은 BigQuery 관리자면 충분함
+- credential 확인 방법으로 json 파일을 사용하지 않고 adc 방식(배포 환경에서 gcloud 로그인하여 credential 자동 인식)을 사용하는 방법도 있으나, 본 프로젝트는 가능한 한 배포 환경에 영향을 받지 않도록 구성하고 있으므로 계정 키를 사용함
+- 만약 gcp에만 배포한다면 계정 키를 사용하는 대신 adc를 사용하는 게 보안에 좋음
+- 키 파일 명을 bigquery-service-account.json로 설정했는데 필요 시 변경 가능. 변경 시 .gitignore 반영 필수

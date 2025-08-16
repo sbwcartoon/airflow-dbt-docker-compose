@@ -7,8 +7,8 @@ cleaned as (
         user_id,
         email,
         event_type,
-        event_at::timestamp as event_time,
-        loaded_at::timestamp as loaded_at
+        cast(event_at as timestamp) as event_time,
+        cast(loaded_at as timestamp) as loaded_at
     from source
     where email is not null
 ),

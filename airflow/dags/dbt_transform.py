@@ -17,18 +17,14 @@ def run_dbt_command(command: str):
                 for key, value in {
                     "DBT_PROFILES_DIR": "/usr/app/profiles",
                     "DBT_TARGET": os.environ.get("DBT_TARGET"),
-                    "LOCAL_ANALYTICS_POSTGRES_HOST": os.environ.get("LOCAL_ANALYTICS_POSTGRES_HOST"),
-                    "LOCAL_ANALYTICS_POSTGRES_USER": os.environ.get("LOCAL_ANALYTICS_POSTGRES_USER"),
-                    "LOCAL_ANALYTICS_POSTGRES_PASSWORD": os.environ.get("LOCAL_ANALYTICS_POSTGRES_PASSWORD"),
-                    "LOCAL_ANALYTICS_POSTGRES_DB": os.environ.get("LOCAL_ANALYTICS_POSTGRES_DB"),
-                    "LOCAL_ANALYTICS_POSTGRES_DEFAULT_SCHEMA": os.environ.get("LOCAL_ANALYTICS_POSTGRES_DEFAULT_SCHEMA"),
-                    "LOCAL_ANALYTICS_POSTGRES_PORT": os.environ.get("LOCAL_ANALYTICS_POSTGRES_PORT"),
-                    "PROD_ANALYTICS_POSTGRES_HOST": os.environ.get("PROD_ANALYTICS_POSTGRES_HOST"),
-                    "PROD_ANALYTICS_POSTGRES_USER": os.environ.get("PROD_ANALYTICS_POSTGRES_USER"),
-                    "PROD_ANALYTICS_POSTGRES_PASSWORD": os.environ.get("PROD_ANALYTICS_POSTGRES_PASSWORD"),
-                    "PROD_ANALYTICS_POSTGRES_DB": os.environ.get("PROD_ANALYTICS_POSTGRES_DB"),
-                    "PROD_ANALYTICS_POSTGRES_DEFAULT_SCHEMA": os.environ.get("PROD_ANALYTICS_POSTGRES_DEFAULT_SCHEMA"),
-                    "PROD_ANALYTICS_POSTGRES_PORT": os.environ.get("PROD_ANALYTICS_POSTGRES_PORT"),
+                    "LOCAL_ANALYTICS_GCP_PROJECT_ID": os.environ.get("LOCAL_ANALYTICS_GCP_PROJECT_ID"),
+                    "LOCAL_ANALYTICS_GCP_LOCATION": os.environ.get("LOCAL_ANALYTICS_GCP_LOCATION"),
+                    "LOCAL_GOOGLE_APPLICATION_CREDENTIALS": "/" + os.environ.get("LOCAL_GOOGLE_APPLICATION_CREDENTIALS"),
+                    "LOCAL_ANALYTICS_GCP_DEFAULT_DATASET": os.environ.get("LOCAL_ANALYTICS_GCP_DEFAULT_DATASET"),
+                    "PROD_ANALYTICS_GCP_PROJECT_ID": os.environ.get("PROD_ANALYTICS_GCP_PROJECT_ID"),
+                    "PROD_ANALYTICS_GCP_LOCATION": os.environ.get("PROD_ANALYTICS_GCP_LOCATION"),
+                    "PROD_GOOGLE_APPLICATION_CREDENTIALS": "/" + os.environ.get("PROD_GOOGLE_APPLICATION_CREDENTIALS"),
+                    "PROD_ANALYTICS_GCP_DEFAULT_DATASET": os.environ.get("PROD_ANALYTICS_GCP_DEFAULT_DATASET"),
                 }.items() if value is not None
             ])
 

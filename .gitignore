@@ -300,3 +300,4 @@ pyrightconfig.json
 
 .env*
 !.env.example
+bigquery-service-account.json
