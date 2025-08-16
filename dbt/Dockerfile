@@ -26,7 +26,7 @@ ARG SSH_PASSWORD
 
 RUN useradd -ms /bin/bash $SSH_ID \
     && echo $SSH_ID:$SSH_PASSWORD | chpasswd \
-    && mkdir /var/run/sshd
+    && mkdir -p /var/run/sshd
 
 RUN sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
     sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config && \
