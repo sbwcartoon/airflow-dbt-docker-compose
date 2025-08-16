@@ -6,9 +6,10 @@ from airflow.decorators import dag, task
 
 from datetime import datetime
 
-from sqlalchemy import text
+from google.api_core.exceptions import NotFound
+from google.cloud.bigquery import Dataset, LoadJobConfig
 
-from utils.db_connection import get_analytics_engine, get_source_engine
+from utils.db_connection import get_analytics_client, get_source_engine
 from utils.preprocessing import mask_email
 
 
@@ -22,21 +23,30 @@ from utils.preprocessing import mask_email
 def pipeline():
     @task
     def create_schema_and_tables_if_not_exists():
-        analytics_engine = get_analytics_engine()
+        analytics_client = get_analytics_client()
 
-        with analytics_engine.begin() as conn:
-            conn.execute(text("create schema if not exists raw"))
-            conn.execute(text("""
-                              create table if not exists raw.game_events
+        project_id = os.getenv("ANALYTICS_GCP_PROJECT_ID")
+        dataset_id = "raw"
+        table_id = f"{project_id}.{dataset_id}.game_events"
+        try:
+            analytics_client.get_dataset(f"{project_id}.{dataset_id}")
+        except NotFound:
+            dataset = Dataset(f"{project_id}.{dataset_id}")
+            dataset.location = os.getenv("ANALYTICS_GCP_LOCATION", "US")
+            analytics_client.create_dataset(dataset)
+
+        query_job = analytics_client.query(f"""
+                              create table if not exists `{table_id}`
                               (
-                                  event_id int primary key,
-                                  user_id int,
-                                  email text,
-                                  event_type text,
+                                  event_id int64,
+                                  user_id int64,
+                                  email string,
+                                  event_type string,
                                   event_at timestamp,
                                   loaded_at timestamp
                               )
-                              """))
+                              """)
+        query_job.result()
 
     @task()
     def extract() -> pd.DataFrame:
@@ -61,18 +71,20 @@ def pipeline():
 
     @task()
     def load(df: pd.DataFrame) -> None:
-        analytics_engine = get_analytics_engine()
+        analytics_client = get_analytics_client()
 
-        with analytics_engine.begin() as conn:
-            conn.execute(text("truncate table raw.game_events"))
+        project_id = os.getenv("ANALYTICS_GCP_PROJECT_ID")
+        dataset_id = "raw"
+        table_id = f"{project_id}.{dataset_id}.game_events"
 
-            df.to_sql(
-                name="game_events",
-                con=conn,
-                schema="raw",
-                if_exists="append",
-                index=False,
-            )
+        analytics_client.query(f"truncate table `{table_id}`").result()
+
+        job_config = LoadJobConfig(write_disposition="WRITE_APPEND")
+        analytics_client.load_table_from_dataframe(
+            dataframe=df,
+            destination=table_id,
+            job_config=job_config
+        ).result()
 
     extracted_df = extract()
     preprocessed_df = preprocess(extracted_df)

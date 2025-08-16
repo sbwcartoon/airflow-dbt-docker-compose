@@ -2,20 +2,24 @@ default:
   target: "{{ env_var('DBT_TARGET') }}"
   outputs:
     local:
-      type: postgres
-      host: "{{ env_var('LOCAL_ANALYTICS_POSTGRES_HOST') }}"
-      user: "{{ env_var('LOCAL_ANALYTICS_POSTGRES_USER') }}"
-      password: "{{ env_var('LOCAL_ANALYTICS_POSTGRES_PASSWORD') }}"
-      dbname: "{{ env_var('LOCAL_ANALYTICS_POSTGRES_DB') }}"
-      schema: "{{ env_var('LOCAL_ANALYTICS_POSTGRES_DEFAULT_SCHEMA') }}"
-      threads: 2
-      port: "{{ env_var('LOCAL_ANALYTICS_POSTGRES_PORT') | int }}"
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('LOCAL_ANALYTICS_GCP_PROJECT_ID') }}"
+      dataset: "{{ env_var('LOCAL_ANALYTICS_GCP_DEFAULT_DATASET') }}"
+      threads: 4
+      keyfile: "{{ env_var('LOCAL_GOOGLE_APPLICATION_CREDENTIALS') }}"
+      location: "{{ env_var('LOCAL_ANALYTICS_GCP_LOCATION') }}"
+      priority: interactive
+      timeout_seconds: 300
+      retries: 1
     prod:
-      type: postgres
-      host: "{{ env_var('PROD_ANALYTICS_POSTGRES_HOST') }}"
-      user: "{{ env_var('PROD_ANALYTICS_POSTGRES_USER') }}"
-      password: "{{ env_var('PROD_ANALYTICS_POSTGRES_PASSWORD') }}"
-      dbname: "{{ env_var('PROD_ANALYTICS_POSTGRES_DB') }}"
-      schema: "{{ env_var('PROD_ANALYTICS_POSTGRES_DEFAULT_SCHEMA') }}"
-      threads: 2
-      port: "{{ env_var('PROD_ANALYTICS_POSTGRES_PORT') | int }}"
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('PROD_ANALYTICS_GCP_PROJECT_ID') }}"
+      dataset: "{{ env_var('PROD_ANALYTICS_GCP_DEFAULT_DATASET') }}"
+      threads: 4
+      keyfile: "{{ env_var('PROD_GOOGLE_APPLICATION_CREDENTIALS') }}"
+      location: "{{ env_var('PROD_ANALYTICS_GCP_LOCATION') }}"
+      priority: batch
+      timeout_seconds: 3600
+      retries: 3
