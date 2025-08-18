@@ -6,3 +6,4 @@ ssh_host_keys/
 
 dbt_packages/
 logs/
+**/.user.yml
