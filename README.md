@@ -37,8 +37,9 @@ env file을 선택해서 실행 script를 구동. .env.example을 참고하여 e
   - 8082 포트: airflow ui
     - id: airflow
     - password: airflow
-    - 필요 시 env 파일에 _AIRFLOW_WWW_USER_USERNAME, _AIRFLOW_WWW_USER_PASSWORD 설정 시 id, password 커스텀 설정 가능
+    - 필요 시 env 파일에서 _AIRFLOW_WWW_USER_USERNAME, _AIRFLOW_WWW_USER_PASSWORD, AIRFLOW_APISERVER_PORT 설정 시 각각 id, password, port 커스텀 설정 가능
   - 8085 포트: dbt docs
+    - 필요 시 env 파일에서 DBT_DOCS_PORT 설정 시 port 커스텀 설정 가능
 - bash
   - docker container를 임시 생성 후 명령어를 실행하는 형태로 사용 가능(완료 시 임시 생성한 container는 삭제함)
     > docker compose run --rm {docker compose service 이름} {서비스 이름} {명령어}
@@ -66,7 +67,7 @@ env file을 선택해서 실행 script를 구동. .env.example을 참고하여 e
 ### 구동 컨테이너 정보
 
 - 구동 시 생성되는 컨테이너 목록
-  - airflow-apiserver-dbt-simple: airflow ui(8082 포트). id: airflow, password: airflow
+  - airflow-apiserver-dbt-simple: airflow ui(기본 8082 포트). id: airflow, password: airflow
   - airflow-scheduler-dbt-simple: dag을 스케줄링하고 실행을 트리거
   - airflow-dag-processor-dbt-simple: dag 파일 파싱 전담 프로세스
   - airflow-triggerer-dbt-simple: deferrable operator 실행용
@@ -74,7 +75,7 @@ env file을 선택해서 실행 script를 구동. .env.example을 참고하여 e
   - airflow-cli-dbt-simple: airflow 디버깅 cli(--profile debug 옵션을 줘야 사용 가능)
   - init-airflow-dbt-ssh-connections-dbt-simple: airflow에서 ssh 기반으로 dbt를 실행. ssh 로그인 정보 포함(구동 후 자동 exit됨)
   - dbt-simple: dbt. dbt deps로 관련 패키지를 설치하고 ssh를 구동(listen)
-  - dbt-docs-dbt-simple: dbt docs 서버(8085 포트)
+  - dbt-docs-dbt-simple: dbt docs 서버(기본 8085 포트)
 - airflow 관련 컨테이너는 공식 사이트를 참고하여 작성함
   - [docker에서 작동 참고](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#running-airflow-in-docker)
   - [docker-compose.yml 참고](https://airflow.apache.org/docs/apache-airflow/3.0.3/docker-compose.yaml)
