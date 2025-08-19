@@ -39,7 +39,7 @@ x-airflow-common:
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW_META_DB}
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-apiserver:8082/execution/'
+    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-apiserver:${AIRFLOW_APISERVER_PORT:-8082}/execution/'
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
@@ -68,9 +68,9 @@ services:
     <<: *airflow-common
     container_name: airflow-apiserver-dbt-simple
     ports:
-      - "8082:8082"
+      - "${AIRFLOW_APISERVER_PORT:-8082}:${AIRFLOW_APISERVER_PORT:-8082}"
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://localhost:8082/api/v2/version" ]
+      test: [ "CMD-SHELL", "curl --fail http://localhost:${AIRFLOW_APISERVER_PORT:-8082}/api/v2/version || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -78,7 +78,7 @@ services:
     restart: on-failure
     depends_on:
       <<: *airflow-common-depends-on
-    command: api-server --port 8082
+    command: api-server --port ${AIRFLOW_APISERVER_PORT:-8082}
 
   airflow-scheduler:
     <<: *airflow-common
@@ -280,10 +280,10 @@ services:
       dbt:
         condition: service_healthy
     ports:
-      - "8085:8085"
+      - "${DBT_DOCS_PORT:-8085}:${DBT_DOCS_PORT:-8085}"
     entrypoint: /bin/bash
     command:
       - -c
       - |
         dbt docs generate
-        dbt docs serve --port 8085 --no-browser --host 0.0.0.0
+        dbt docs serve --port ${DBT_DOCS_PORT:-8085} --no-browser --host 0.0.0.0
