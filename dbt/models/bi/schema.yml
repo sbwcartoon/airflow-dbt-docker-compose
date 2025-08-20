@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: view_fct_user_event_metrics
+    description: "User event type daily counts"
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+      - name: email
+        tests:
+          - not_null
+      - name: region
+        tests:
+          - not_null
+      - name: first_seen_at
+        tests:
+          - not_null
+      - name: event_type
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+      - name: event_day_of_week
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
+      - name: first_event_time
+        tests:
+          - not_null
+      - name: last_event_time
+        tests:
+          - not_null
