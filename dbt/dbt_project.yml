@@ -17,3 +17,6 @@ models:
       +materialized: incremental
       dim_users:
         +materialized: table
+    bi:
+      +schema: bi
+      +materialized: view
