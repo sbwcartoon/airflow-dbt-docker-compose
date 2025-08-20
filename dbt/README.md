@@ -1,5 +1,26 @@
 # DBT for Airflow + DBT
 
+### 레이어 구성
+
+- raw
+  - 원본 데이터를 모델링하기 위한 base 레이어
+  - 기존 db에 이미 존재하며, dbt에서는 데이터 형식이 적합한지 test만 가능(dbt test)
+  - 원본 데이터와의 인터페이스 역할
+- staging
+  - raw 데이터를 표준화하고 정제하여 후속 모델에서 바로 사용할 수 있는 기본 레이어
+  - 컬럼 명/데이터 유형 정리, 불필요 컬럼 제거, null 처리 등
+- intermediate
+  - staging 레이어를 바탕으로 생성하는 중간 레이어
+  - 데이터를 marts 레이어에서 쉽게 참조할 수 있는 형태로 가공
+  - 여러 테이블 조인, 비즈니스 로직 적용, 파생 컬럼 생성, 집계 등
+- marts
+  - intermediate 레이어를 바탕으로 최종 분석 및 BI 용도로 fact/dimension 테이블을 제공하는 레이어
+  - 테이블 명 prefix는 fact=fct_, dimension=dim_
+- bi
+  - marts 레이어를 기반으로 한 뷰 레이어(marts 레이어의 버전 변경에 대비)
+  - 본 데이터를 활용하는 서비스(Looker Studio 등)와의 인터페이스 역할
+  - 테이블 명은 view_{marts의 fact 테이블 명}. ex. fct_user_event_metrics => view_fct_user_event_metrics
+
 ### 스키마 설정
 
 - dbt 작동 결과 데이터가 저장되는 기본 스키마는 dbt(profiles/profiles.yml에 정의함)
