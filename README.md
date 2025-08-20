@@ -5,6 +5,7 @@
 - docker compose로 airflow, dbt를 함께 구동
 - 구동 시 사용할 env 파일을 선택(--env-file 옵션 사용)
 - 구동 환경에서 docker compose 실행 시 관련 [컨테이너들이 생성 및 실행됨](#구동-컨테이너-정보)
+- 파이프라인 완료 데이터 활용 예 -> [Looker Studio 리포트 샘플(데이터 갱신은 안됨)](https://lookerstudio.google.com/reporting/fa5d0eb6-d368-40b9-9ffc-dfd1091250a7)
 
 ### 구동 전 준비
 
